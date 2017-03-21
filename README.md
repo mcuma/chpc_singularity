@@ -102,3 +102,4 @@ singularity shell -B /scratch -B /uufs/chpc.utah.edu -s /bin/bash ubuntu_tensorf
 
 - running MPI programs that are in the container - IMHO unless the application is really difficult to build, stick to host based execution
 - including sys branch tools like MKL in the container for better performance
+- running X applications out of the container
