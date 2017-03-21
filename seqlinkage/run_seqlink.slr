@@ -1,0 +1,16 @@
+#!/bin/tcsh
+#SBATCH -n 8
+#SBATCH -N 1
+#SBATCH -A chpc
+#SBATCH -p scrubpeak
+#SBATCH -t 0:10:00
+
+ml purge
+ml SEQLinkage
+
+# bash does not seem to pass the alias in SLURM batch script job, while tcsh does
+# this works fine when doing interactive job
+
+cd /uufs/chpc.utah.edu/common/home/u0101881/containers/singularity/containers/chpc/seqlinkage/test
+seqlink --fam MissingData/real100quads.ped --vcf MissingData/rep1.vcf.gz -f MERLIN --output output/DISC1nppnomiss --prephased -j 8
+
