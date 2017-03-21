@@ -27,7 +27,7 @@ I prefer to have a script, called [`build_container.sh`](https://github.com/mcum
 
 The container definition file describes the bootstrap process, described [here](http://singularity.lbl.gov/bootstrap-image). 
 
-To create a new container, the easiest is to get one of the definition files and modify accordingly. Singularity has some examples [here](https://github.com/singularityware/singularity/tree/master/exampleshttps://github.com/singularityware/singularity/tree/master/examples), or start from the examples on this git page.
+To create a new container, the easiest is to get one of the definition files and modify accordingly. Singularity has some examples [here](https://github.com/singularityware/singularity/tree/master/examples), or start from the examples on this git page.
 
 Effort should be made to make the container building non-interactive, so they can be automatically rebuilt. Singularity developers also encourage doing everything from the def file, rather than launching `singularity exec` to add stuff to the container. 
 
