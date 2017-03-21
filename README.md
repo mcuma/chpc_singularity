@@ -89,3 +89,16 @@ That is, to bring in home dir, scratches and the sys branch, we'd launch the con
 singularity shell -B /scratch -B /uufs/chpc.utah.edu -s /bin/bash ubuntu_tensorflow_gpu.img
 ```
 
+## Deploying the container
+
+- copy the definition file and other potential needed files to the srcdir 
+- copy the container image (img file) to installdir
+- create module file that wraps the package call through the container, for example see [SEQLinkage module file](https://github.com/mcuma/chpc_singularity/blob/master/seqlinkage/1.0.0.lua).
+- create SLURM batch script example, for example see [SEQLinkage batch script]/(https://github.com/mcuma/chpc_singularity/blob/master/seqlinkage/run_seqlink.slr)
+-- NOTE that LMod does not expand alias correctly in bash non-interactive shell, so, use tcsh for the SLURM batch scripts until this is resolved
+
+
+## Things to still look at
+
+- running MPI programs that are in the container - IMHO unless the application is really difficult to build, stick to host based execution
+- including sys branch tools like MKL in the container for better performance
