@@ -25,13 +25,17 @@ I prefer to have a script, called `build_container.sh` that calls these two comm
 
 The container definition file describes the bootstrap process, described [here](http://singularity.lbl.gov/bootstrap-image). 
 
-To create a new container, the easiest is to get one of the definition files and modify accordingly. Effort should be made to make the container building non-interactive, so they can be easily rebuilt. 
+To create a new container, the easiest is to get one of the definition files and modify accordingly. Singularity has some examples [here](https://github.com/singularityware/singularity/tree/master/exampleshttps://github.com/singularityware/singularity/tree/master/examples), or start from the examples on this git page.
+
+Effort should be made to make the container building non-interactive, so they can be automatically rebuilt. 
 
 The strategy that I found works reasonably well is to bootstrap the base OS image and then manually execute commands to build the particular package, while writing them down in a shell script. Then take the commands from this shell script and put them as a scriptlet to the `%post` section of the def file. 
 
 To launch a shell in the new image, `sudo singularity shell -w -s /bin/bash myimage.img`, `-w` makes the image writeable, `-s` makes shell bash (easier to use than default sh). `wget` install files into the image, or download them to a local directory, and add `-B `pwd`:/mnt` to the `singularity shell` command to mount the local directory under `/mnt` in the container.
 
 Once the application in the container is installed, and the scriptlet in the def file to do this installation is written, build the container again. If there's a error, fix it and iterate over, until the container builds with no error.
+
+If install files need to be brought in from the host OS, use the `%setup` section, which runs on the host. To put files in the container, use `${SINGULARITY_ROOTFS}`. E.g. to put files to container's `/usr/local`, put it to `${SINGULARITY_ROOTFS}/usr/local`. Example of this is [our tensorflow def file](https://github.com/mcuma/chpc_singularity/blob/master/tensorflow/ubuntu16-tensorflow-1.0.1-gpu.def)
 
 ### A few tips
 - make sure to create mount points for CHPC file servers:
@@ -51,7 +55,7 @@ Once the application in the container is installed, and the scriptlet in the def
 - `%test` section does not seem to bring environment from /environment created in `%post` section, so, make sure to define PATH and LD_LIBRARY_PATH in the `%test` section before running tests.
 - the `%post` section starts at `/` directory, so, cd to some other directory (e.g. `/root`) before building programs.
 
-### Running container
+## Running the container
 
 Singularity container is an executable so it can be run as is (which launches whatever is in `%runscript` section), or with `singularity exec` followed by the command within container, e.g.:
 ```
