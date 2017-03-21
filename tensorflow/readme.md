@@ -5,9 +5,9 @@ Important detail for GPU support - the container must have the same version of N
 CHPC specifics as of March 2017 - using CentOS7 RPM package for NVidia driver libraries, which version (367.48) differs from the multi-distro binaries. Therefore we need to extract the NVidia libraries from RPM.
 
 Required packages:
-NVidia driver libraries RPM - xorg-x11-drv-nvidia-libs-367.48-1.el7.x86_64.rpm
-CUDA installer - cuda_8.0.44_linux.run
-CUDNN libraries - cudnn-8.0-linux-x64-v5.1.tgz
+- NVidia driver libraries RPM - xorg-x11-drv-nvidia-libs-367.48-1.el7.x86_64.rpm
+- CUDA installer - cuda_8.0.44_linux.run
+- CUDNN libraries - cudnn-8.0-linux-x64-v5.1.tgz
 
 Copy these files in the same directory where the other files are.
 
@@ -24,11 +24,11 @@ singularity shell -B /scratch -s /bin/bash ubuntu_tensorflow_gpu.img
 Then test how NumPy was built and check if TensorFlow can see the GPU by running "python testtf.py".
 
 Useful links:
-Clemson GitHub singularity recipes: https://github.com/clemsonciti/singularity-images
-Discussion on NVidia driver version and TF build: https://groups.google.com/a/lbl.gov/forum/#!topic/singularity/CezfXNjLGe0
-NVidia CentOS 7 RPMs: http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/
-TF install URLs: https://www.tensorflow.org/install/install_linux#the_url_of_the_tensorflow_python_package
-TF tutorials: https://www.tensorflow.org/tutorials
+- Clemson GitHub singularity recipes: https://github.com/clemsonciti/singularity-images
+- Discussion on NVidia driver version and TF build: https://groups.google.com/a/lbl.gov/forum/#!topic/singularity/CezfXNjLGe0
+- NVidia CentOS 7 RPMs: http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/
+- TF install URLs: https://www.tensorflow.org/install/install_linux#the_url_of_the_tensorflow_python_package
+- TF tutorials: https://www.tensorflow.org/tutorials
 
 Note on GPU drivers
 
