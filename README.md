@@ -17,9 +17,9 @@ Local changes done by hpcapps:
 
 To create a container, one needs to first create the image:
 ```
-sudo singularity create --size 16384  ubuntu_$imgname.img
+sudo singularity create --size 4096 ubuntu_$imgname.img
 ```
-and then bootstrap (install) the OS, and other needed program:
+and then bootstrap (install) the OS, and other needed programs:
 ```
 sudo singularity bootstrap ubuntu_$imgname.img ubuntu_$imgname.def
 ```
@@ -32,13 +32,13 @@ To create a new container, the easiest is to get one of the definition files and
 Effort should be made to make the container building non-interactive, so they can be automatically rebuilt. Singularity developers also encourage doing everything from the def file, rather than launching `singularity exec` to add stuff to the container. 
 
 ### Container build strategy
-The strategy that I found works reasonably well is to bootstrap the base OS image, `singularity shell` into the container and then manually execute commands to build the particular package, while writing them down in a shell script. Oftentimes the packages have some kinds of shell scripts that install dependencies, and then install the program itself. Though, it can take time to iterate over and fix issues, mostly related to missing dependencies. Once things work, paste commands from this shell script as a scriptlet to the `%post` section of the def file. 
+The strategy that I found works reasonably well is to bootstrap the base OS image, `singularity shell` into the container and then manually execute commands to build the particular package, while writing them down in a shell script. Oftentimes the packages have some kinds of shell scripts that install dependencies, and the program itself. Though, it can take time to iterate over and fix issues, mostly related to missing dependencies. Once things work, paste commands from this shell script as a scriptlet to the `%post` section of the def file. 
 
-To launch a shell in the new image, `sudo singularity shell -w -s /bin/bash myimage.img`, `-w` makes the image writeable, `-s` makes shell bash (easier to use than default sh). `wget` install files into the image, or download them to a local directory, and add `-B `pwd`:/mnt` to the `singularity shell` command to mount the local directory under `/mnt` in the container.
+To launch a shell in the new image, `sudo singularity shell -w -s /bin/bash myimage.img`, `-w` makes the image writeable, `-s` makes shell bash (easier to use than default sh). In the container, use `apt-get` or `yum` to install the required dependencies (when something is missing, google what package contains it), and finally `wget` the install files for the program, or download them to a local directory, and add `-B `pwd`:/mnt` to the `singularity shell` command to mount the local directory under `/mnt` in the container.
 
-Once the application in the container is installed, and the scriptlet in the def file to do this installation is written, build the container again. If there's a error, fix it and iterate over, until the container builds with no error.
+Once the application in the container is installed, and the scriptlet in the def file to do this installation is written, build the container again. If there's an error, fix it and iterate over, until the container builds with no error.
 
-If install files need to be brought in from the host OS, use the `%setup` section, which runs on the host. To put files in the container, use `${SINGULARITY_ROOTFS}`. E.g. to put files to container's `/usr/local`, put it to `${SINGULARITY_ROOTFS}/usr/local`. Example of this is [our tensorflow def file](https://github.com/mcuma/chpc_singularity/blob/master/tensorflow/ubuntu16-tensorflow-1.0.1-gpu.def).
+If install files need to be brought in from the host OS, including files that need to be downloaded interactively (e.g. CUDA installer) use the `%setup` section, which runs on the host. To put files in the container, use `${SINGULARITY_ROOTFS}`. E.g. to put files to container's `/usr/local`, put it to `${SINGULARITY_ROOTFS}/usr/local`. Example of this is [our tensorflow def file](https://github.com/mcuma/chpc_singularity/blob/master/tensorflow/ubuntu16-tensorflow-1.0.1-gpu.def).
 
 To test the installation, use the `%test` section to put there commands that run tests.
 
@@ -71,7 +71,8 @@ See [our bioBakery def file]() for full definition file that shows this.
 
 Singularity container is an executable so it can be run as is (which launches whatever is in `%runscript` section), or with `singularity exec` followed by the command within container, e.g.:
 ```
-singularity exec -B /scratch debian_SEQLinkage.img seqlink
+singularity exec -B /scratch debian_SEQLinkage.img seqlink [parameters]
+singularity run debian_SEQLinkage.img
 ```
 If more than one command are needed to be executed in the container, one can run `singularity shell`, e.g.
 ```
