@@ -78,6 +78,7 @@ If more than one command are needed to be executed in the container, one can run
 ```
 singularity shell -s /bin/bash -B /scratch /ubuntu_biobakery.img
 ```
+To specify the shell to use (default /bin/sh is not very friendly), use the `-s` flag or environment variable `SINGULARITY_SHELL=/bin/bash`.
 
 ### Binding file systems
 
@@ -89,6 +90,7 @@ That is, to bring in home dir, scratches and the sys branch, we'd launch the con
 ```
 singularity shell -B /scratch -B /uufs/chpc.utah.edu -s /bin/bash ubuntu_tensorflow_gpu.img
 ```
+Alternatively, use environment variable `SINGULARITY_BINDPATH="/scratch,/uufs/chpc.utah.edu".
 
 ## Deploying the container
 
