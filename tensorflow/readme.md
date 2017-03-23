@@ -29,6 +29,7 @@ Useful links:
 - NVidia CentOS 7 RPMs: http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/
 - TF install URLs: https://www.tensorflow.org/install/install_linux#the_url_of_the_tensorflow_python_package
 - TF tutorials: https://www.tensorflow.org/tutorials
+- TF examples: https://github.com/aymericdamien/TensorFlow-Examples
 
 Note on GPU drivers
 

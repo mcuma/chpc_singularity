@@ -81,6 +81,8 @@ MirrorURL: http://ftp.us.debian.org/debian/
    cd $TESTDIR
    cp -r /tmp/test .
    cd test
+   # just so we remember to use bash so we can use LMods shell function to wrap the container command
+   echo "SHELL = /bin/bash" >> Makefile
    make regular
    make missing
    cd
