@@ -17,7 +17,6 @@ MirrorURL: http://ftp.us.debian.org/debian/
     mkdir /uufs
     mkdir /scratch
     cd /root
-    pwd
 
     apt-get update
     apt-get -y --force-yes install vim
@@ -74,8 +73,9 @@ MirrorURL: http://ftp.us.debian.org/debian/
 %test
 
 # assuming that we have the test files in /tmp/test
-   echo $PATH
+   # /environment does not seem to get set (2.2.1), so, set PATH
    export PATH=/opt/anaconda2/bin:$PATH
+   # to run tests as user, need to do it in own directory with right permissions
    TESTDIR=/tmp/seqlink
    mkdir -p $TESTDIR
    cd $TESTDIR
@@ -83,6 +83,7 @@ MirrorURL: http://ftp.us.debian.org/debian/
    cd test
    # just so we remember to use bash so we can use LMods shell function to wrap the container command
    echo "SHELL = /bin/bash" >> Makefile
+   # finally run the tests
    make regular
    make missing
    cd
