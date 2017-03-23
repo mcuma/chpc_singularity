@@ -25,5 +25,5 @@ After "ml singularity", run build_container.sh. This does the following:
 - runs SEQLinkage tests (as user)
 
 Useful links:
-SEQLinkage installation: http://bioinformatics.org/seqlink/installation
-Anaconda download: https://www.continuum.io/downloads
+- SEQLinkage installation: http://bioinformatics.org/seqlink/installation
+- Anaconda download: https://www.continuum.io/downloads

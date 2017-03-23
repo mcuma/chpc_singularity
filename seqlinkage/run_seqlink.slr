@@ -1,16 +1,15 @@
-#!/bin/tcsh
-#SBATCH -n 8
+#!/bin/bash
+#SBATCH -n 8            # change to the number of cores on the node
 #SBATCH -N 1
-#SBATCH -A chpc
-#SBATCH -p scrubpeak
-#SBATCH -t 0:10:00
+#SBATCH -A chpc         # change to your group, or owner-guest, or CLUSTER-guest
+#SBATCH -p scrubpeak    # change to CLUSTER, or CLUSTER-guest
+#SBATCH -t 0:10:00      # change to the anticipated runtime
 
 ml purge
 ml SEQLinkage
 
-# bash does not seem to pass the alias in SLURM batch script job, while tcsh does
-# this works fine when doing interactive job
-
+# cd to the directory where we want to run
 cd /uufs/chpc.utah.edu/common/home/u0101881/containers/singularity/containers/chpc/seqlinkage/test
-seqlink --fam MissingData/real100quads.ped --vcf MissingData/rep1.vcf.gz -f MERLIN --output output/DISC1nppnomiss --prephased -j 8
+# run, -j $SLURM_NTASKS is the level of parallelism 
+seqlink --fam MissingData/real100quads.ped --vcf MissingData/rep1.vcf.gz -f MERLIN --output output/DISC1nppnomiss --prephased -j $SLURM_NTASKS
 
