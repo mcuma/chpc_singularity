@@ -66,6 +66,7 @@ See [our bioBakery def file]() for full definition file that shows this.
 - `%test` section does not seem to bring environment from /environment created in `%post` section, so, make sure to define PATH and LD_LIBRARY_PATH in the `%test` section before running tests.
 - the `%post` section starts at `/` directory, so, cd to some other directory (e.g. `/root`) before building programs.
 - to support NVidia GPUs in the container, one needs to instal a few NVidia driver libraries of the same version as the host driver. To find the version, run `rpm -qa | grep nvidia`. Then either follow [our tensorflow def file](https://github.com/mcuma/chpc_singularity/blob/master/tensorflow/ubuntu16-tensorflow-1.0.1-gpu.def) or bring libcuda.so and libnvidia-fatbinaryloader.so from the host.
+- to support InfiniBand, need to install the IB driver stack in the container and make sure the driver sos are in the LD_LIBRARY_PATH (see the ubuntu_mpi container recipe for details).
 
 ## Running the container
 
@@ -103,6 +104,7 @@ Alternatively, use environment variable `SINGULARITY_BINDPATH="/scratch,/uufs/ch
 
 ## Things to still look at
 
-- running MPI programs that are in the container - IMHO unless the application is really difficult to build, stick to host based execution
+- running MPI programs that are in the container - IMHO unless the application is really difficult to build, stick to host based execution - works, see ubuntu_mpi
 - including sys branch tools like MKL in the container for better performance
-- running X applications out of the container
+ -- can supply Ubuntu's OpenBlas under numpy - need to test performance
+- running X applications out of the container - works, but, OpenGL is questionable
