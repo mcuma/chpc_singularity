@@ -67,6 +67,10 @@ See [our bioBakery def file]() for full definition file that shows this.
 - the `%post` section starts at `/` directory, so, cd to some other directory (e.g. `/root`) before building programs.
 - to support NVidia GPUs in the container, one needs to instal a few NVidia driver libraries of the same version as the host driver. To find the version, run `rpm -qa | grep nvidia`. Then either follow [our tensorflow def file](https://github.com/mcuma/chpc_singularity/blob/master/tensorflow/ubuntu16-tensorflow-1.0.1-gpu.def) or bring libcuda.so and libnvidia-fatbinaryloader.so from the host.
 - to support InfiniBand, need to install the IB driver stack in the container and make sure the driver sos are in the LD_LIBRARY_PATH (see the ubuntu_mpi container recipe for details).
+- Singularity container inherits the environment from the host shell, including PATH. One needs to be aware of this when setting things up. E.g. starting the container from a fairly clean environment may be a good idea. The only thing that it does not inherit are
+ -- LD_LIBRARY_PATH
+ -- shell functions (e.g. LMod defines its commands via shell functions)
+- supporting modules (LMod) requires separate LMod installation for Ubuntu based containers and a few other modifications, detailed below
 
 ## Running the container
 
@@ -91,7 +95,28 @@ That is, to bring in home dir, scratches and the sys branch, we'd launch the con
 ```
 singularity shell -B /scratch -B /uufs/chpc.utah.edu -s /bin/bash ubuntu_tensorflow_gpu.img
 ```
-Alternatively, use environment variable `SINGULARITY_BINDPATH="/scratch,/uufs/chpc.utah.edu".
+Alternatively, use environment variable `SINGULARITY_BINDPATH="/scratch,/uufs/chpc.utah.edu"`.
+
+### Including LMod support
+
+Modules support pulling programs from CHPC sys branch may be useful for some containers. In particular, we can use the Intel compiler/MPI stack to build MPI programs in the container, or use Intel Python Distribution. Both are built in distro-agnostic fashion so if installed on CentOS, they work on e.g. Ubuntu.
+
+This description is for Ubuntu based containers, for CentOS, sys branch LMod should work directly from the container after re-initializing LMod.
+For Ubuntu containers, we need to do the following
+- have LMod installed in the sys branch using Ubuntu - can be done from the container
+ -- now /uufs/chpc.utah.edu/sys/installdir/lmod/7.4-u16/
+ -- need to have specific Ubuntu install since some commands (tr, lua) and Lua libraries have different location on Ubuntu than on CentOS
+ - when building the container, set environment variable SINGULARITY_MOD=1
+ - the user needs to have the following at the end of ~/.custom.sh:
+```
+if [ -n "$SINGULARITY_CONTAINER" ] && [ -n "$SINGULARITY_MOD" ]; then
+  source /uufs/chpc.utah.edu/sys/modulefiles/scripts/clear_lmod.sh
+  source /uufs/chpc.utah.edu/sys/installdir/lmod/7.4-u16/init/profile
+fi
+```
+- the container needs to be started with binding the sys branch, i.e. with `-B /uufs/chpc.utah.edu`
+
+For example of container that has the LMod support built in, see [Ubuntu Python container](https://github.com/mcuma/chpc_singularity/tree/master/ubuntu_python).
 
 ## Deploying the container
 
