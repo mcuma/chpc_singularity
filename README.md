@@ -101,7 +101,7 @@ Alternatively, use environment variable `SINGULARITY_BINDPATH="/scratch,/uufs/ch
 
 Modules support pulling programs from CHPC sys branch may be useful for some containers. In particular, we can use the Intel compiler/MPI stack to build MPI programs in the container, or use Intel Python Distribution. Both are built in distro-agnostic fashion so if installed on CentOS, they work on e.g. Ubuntu.
 
-This description is for Ubuntu based containers, for CentOS, sys branch LMod should work directly from the container after re-initializing LMod.
+This description is for Ubuntu based containers, for CentOS, sys branch LMod works with the CHPC CentOS7 LMod installation after re-initializing LMod (because the shell functions don't get passed to the container).
 For Ubuntu containers, we need to do the following
 - have LMod installed in the sys branch using Ubuntu - can be done from the container
  -- now /uufs/chpc.utah.edu/sys/installdir/lmod/7.4-u16/
@@ -109,9 +109,16 @@ For Ubuntu containers, we need to do the following
  - when building the container, set environment variable SINGULARITY_MOD=1
  - the user needs to have the following at the end of ~/.custom.sh:
 ```
+export OSVER=`lsb_release -r | awk '{ print $2; }'`
+export OSREL=`lsb_release -i | awk '{ print $3; }'`
+
 if [ -n "$SINGULARITY_CONTAINER" ] && [ -n "$SINGULARITY_MOD" ]; then
-  source /uufs/chpc.utah.edu/sys/modulefiles/scripts/clear_lmod.sh
-  source /uufs/chpc.utah.edu/sys/installdir/lmod/7.4-u16/init/profile
+  if [ $OSREL == "CentOS" ]; then # assume only CentOS7
+    source /uufs/chpc.utah.edu/sys/installdir/lmod/7.1.6-c7/init/bash
+  elif [ $OSREL == "Ubuntu" ]; then # assume only Ubuntu 16
+    source /uufs/chpc.utah.edu/sys/modulefiles/scripts/clear_lmod.sh
+    source /uufs/chpc.utah.edu/sys/installdir/lmod/7.4-u16/init/profile
+  fi
 fi
 ```
 - the container needs to be started with binding the sys branch, i.e. with `-B /uufs/chpc.utah.edu`
