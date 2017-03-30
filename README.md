@@ -60,6 +60,16 @@ To test the installation, use the `%test` section to put there commands that run
     su -c 'brew install freetype --build-from-source' brewuser
 ```
 See [our bioBakery def file]() for full definition file that shows this.
+- it can be confusing to see if one is in a container or not. We can modify our prompt to reflect we're in a container, e.g.
+```
+if [ -n "$SINGULARITY_CONTAINER" ] ; then
+#  set prompt = "[$USER@%m:%b%c2]%b "
+  PS1="$(lsb_release -i | awk '{ print $3; }')[\u@\h:\W]\$ "
+else
+#  set prompt = "[$USER@%m:%b%c2]%b "
+  PS1="[\u@\h:\W]\$ "
+fi
+```
 
 
 ### A few caveats that I found
