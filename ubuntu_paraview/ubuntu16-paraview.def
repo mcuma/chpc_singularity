@@ -1,17 +1,10 @@
-# Defines a base Ubuntu 16 Singularity container with basic Python packages
-# uses pip to install numpy so it detects and takes advantage of OpenBLAS
-# OpenBLAS is optimized for multiple CPU archs, on par with MKL for SSE and AVX 
-# and about 30% slower for AVX2
+# Defines a Singularity container with paraview
+#
 
 
-# bootstraping from docker image is faster and includes more dependencies
+
 BootStrap: docker
 From: ubuntu:16.10
-
-#alternatively we can bootstrap directly from the repo
-#BootStrap: debootstrap
-#OSVersion: xenial
-#MirrorURL: http://us.archive.ubuntu.com/ubuntu/
 #Include: rpm2cpio
 
 
@@ -20,15 +13,14 @@ From: ubuntu:16.10
 
 %setup
     # Runs from outside the container during Bootstrap
-    # for example how to use this section see
-    # https://github.com/mcuma/chpc_singularity/blob/master/tensorflow/ubuntu16-tensorflow-1.0.1-gpu.def
+
 
 
 %post
     # Runs within the container during Bootstrap
 
 
-    # Install the commonly used packages (from repo)
+    # Install the necessary packages (from repo)
     apt-get update && apt-get install -y --no-install-recommends \
         apt-utils \
         build-essential \
@@ -54,7 +46,7 @@ From: ubuntu:16.10
     # Set up some required environment defaults
     #MC issue with locale (LC_ALL, LANGUAGE), to get it right:
     locale-gen "en_US.UTF-8" 
-    #dpkg-reconfigure locales 
+    dpkg-reconfigure locales 
     export LANGUAGE="en_US.UTF-8"
     echo 'LANGUAGE="en_US.UTF-8"' >> /etc/default/locale
     echo 'LC_ALL="en_US.UTF-8"' >> /etc/default/locale
@@ -62,7 +54,7 @@ From: ubuntu:16.10
     # Update to the latest pip (newer than repo)
     pip install --no-cache-dir --upgrade pip
     
-    # Install other commonly-needed python packages
+    # Install other commonly-needed packages
     pip install --no-cache-dir --upgrade \
         future \
         matplotlib \
@@ -70,7 +62,6 @@ From: ubuntu:16.10
 
     #for OpenBLAS accelerated Python3 NumPy, install through pip3
     apt-get install -y python3-pip
-    python3-pip install --no-cache-dir --upgrade pip
     pip3 install --no-cache-dir --upgrade pip
     pip3 install --no-cache-dir --upgrade future matplotlib scipy
 
@@ -80,6 +71,9 @@ From: ubuntu:16.10
 
     # git, wget
     apt-get install -y git wget
+
+    apt-get install -y paraview  paraview-dev  paraview-python
+
     # LMod
     apt-get install -y liblua5.1-0 liblua5.1-0-dev lua-filesystem-dev lua-filesystem lua-posix-dev lua-posix lua5.1
 
@@ -100,7 +94,11 @@ From: ubuntu:16.10
     echo "
 export SINGULARITY_MOD=1
     " >> /environment
+
 %test
     # Sanity check that the container is operating
-    # make sure that numpy is using openblas
-    /usr/bin/python -c "import numpy as np;np.__config__.show()"
+    python -c "from paraview.simple import *"
+    # this runs a demo that launches another window
+    # paraview.simple.demo1()
+    
+

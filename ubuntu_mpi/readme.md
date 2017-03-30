@@ -7,7 +7,7 @@ The important addition is
    https://community.mellanox.com/docs/DOC-2431
  - adjusting LD_LIBRARY_PATH in the container to add /usr/lib/libibverbs, which is where the IB driver libs are
 
-We also mount the CHPC sys branch and use Intel compilers and Intel MPI in the sys branch to compile in the container, and then
+We also mount the CHPC sys branch and use Intel compilers and Intel MPI in the sys branch to compile MPI programs in the container, and then
 run on the host.
 
 After the container is built, sudo to the container and build MPI program, e.g.
