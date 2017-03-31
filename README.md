@@ -49,7 +49,8 @@ To test the installation, use the `%test` section to put there commands that run
     mkdir /scratch
 ```
 - additions to default environment (PATH, LD_LIBRARY_PATH) can be put to /environment file in the container, e.g.
-``` echo "
+``` 
+echo "
     PATH=my_new_path:\$PATH
     export PATH
     " >> /environment
