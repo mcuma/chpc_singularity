@@ -60,7 +60,7 @@ echo "
     su -c 'brew install freetype --build-from-source' brewuser
 ```
 See [our bioBakery def file]() for full definition file that shows this.
-- it can be confusing to see if one is in a container or not. We can modify our prompt to reflect we're in a container, e.g.
+- it can be confusing to see if one is in a container or not. We can modify our prompt to reflect we're in a container, e.g. put something line this in your ~/.bashrc:
 ```
 if [ -n "$SINGULARITY_CONTAINER" ] ; then
 #  set prompt = "[$USER@%m:%b%c2]%b "
@@ -70,7 +70,7 @@ else
   PS1="[\u@\h:\W]\$ "
 fi
 ```
-
+I also sometime run this to see if Singularity environment variables are defined, which tells that one is in the container: `env|grep SING`.
 
 ### A few caveats that I found
 - `%test` section does not seem to bring environment from /environment created in `%post` section, so, make sure to define PATH and LD_LIBRARY_PATH in the `%test` section before running tests.
