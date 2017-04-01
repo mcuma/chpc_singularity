@@ -34,7 +34,7 @@ Effort should be made to make the container building non-interactive, so they ca
 ### Container build strategy
 The strategy that I found works reasonably well is to bootstrap the base OS image, `singularity shell` into the container and then manually execute commands to build the particular package, while writing them down in a shell script. Oftentimes the packages have some kinds of shell scripts that install dependencies, and the program itself. Though, it can take time to iterate over and fix issues, mostly related to missing dependencies. Once things work, paste commands from this shell script as a scriptlet to the `%post` section of the def file. 
 
-To launch a shell in the new image, `sudo singularity shell -w -s /bin/bash myimage.img`, `-w` makes the image writeable, `-s` makes shell bash (easier to use than default sh). In the container, use `apt-get` or `yum` to install the required dependencies (when something is missing, google what package contains it), and finally `wget` the install files for the program, or download them to a local directory, and add `-B `pwd`:/mnt` to the `singularity shell` command to mount the local directory under `/mnt` in the container.
+To launch a shell in the new image, `sudo singularity shell -w -s /bin/bash myimage.img`, `-w` makes the image writeable, `-s` makes shell bash (easier to use than default sh). In the container, use `apt-get` or `yum` to install the required dependencies (when something is missing, google what package contains it), and finally `wget` the install files for the program, or download them to a local directory, and add "-B \`pwd\`:/mnt" to the `singularity shell` command to mount the local directory under `/mnt` in the container.
 
 Once the application in the container is installed, and the scriptlet in the def file to do this installation is written, build the container again. If there's an error, fix it and iterate over, until the container builds with no error.
 
@@ -45,8 +45,7 @@ To test the installation, use the `%test` section to put there commands that run
 ### A few tips
 - make sure to create mount points for CHPC file servers:
 ```
-    mkdir /uufs
-    mkdir /scratch
+    mkdir /uufs /scratch
 ```
 - additions to default environment (PATH, LD_LIBRARY_PATH) can be put to /environment file in the container, e.g.
 ``` 
