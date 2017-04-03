@@ -23,7 +23,7 @@ Here are timings for the largest matrix (2000x2000) in
  
   |                                  |  container | native CHPC build w/ MKL|
   | ---------------------------------|--------------|-----------------|
-  |scrubpeak stock blas, 1 thread only| 1370 msec | | 
+  |scrubpeak stock blas, 1 thread only | 1370 msec | | 
   |scrubpeak OpenBLAS, 1 thread   |     1370 msec | 2770 msec|
   |scrubpeak OpenBLAS, 8 threads  |       200 msec | |
   |kp108 AVX OpenBLAS, 1 thread    |     664 msec   | |
