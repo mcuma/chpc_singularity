@@ -150,6 +150,10 @@ fi
 
 For example of container that has the LMod support built in, see [Ubuntu Python container](https://github.com/mcuma/chpc_singularity/tree/master/ubuntu_python).
 
+### Running X applications
+
+X works without any major hassle. See the [Paraview container](https://github.com/mcuma/chpc_singularity/tree/master/ubuntu_paraview) for example. The only catch, which may need to be looked at in the future, is the lack of hardware OpenGL acceleration.
+
 ## Deploying the container
 
 - copy the definition file and other potential needed files to the srcdir 
@@ -162,6 +166,3 @@ For example of container that has the LMod support built in, see [Ubuntu Python 
 ## Things to still look at
 
 
-- including sys branch tools like MKL in the container for better performance
- -- can supply Ubuntu's OpenBlas under numpy - need to test performance
-- running X applications out of the container - works, but, OpenGL is questionable
