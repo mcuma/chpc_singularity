@@ -18,8 +18,11 @@ https://github.com/gforsyth/openblas.vs.mkl
 Here are timings for the largest matrix (2000x2000) in 
 /uufs/chpc.utah.edu/common/home/u0101881/containers/singularity/containers/tests/paraview/numpy/openblas.vs.mkl
 
- - OPENBLAS_NUM_THREADS=8 python3 mattest.py openblas 8
+- with stock Python
+ OPENBLAS_NUM_THREADS=8 python3 mattest.py openblas 8
+ 
   |                                  |  container | native CHPC build w/ MKL|
+  | ---------------------------------|--------------|-----------------|
   |scrubpeak stock blas, 1 thread only| 1370 msec | | 
   |scrubpeak OpenBLAS, 1 thread   |     1370 msec | 2770 msec|
   |scrubpeak OpenBLAS, 8 threads  |       200 msec | |
@@ -31,7 +34,9 @@ Here are timings for the largest matrix (2000x2000) in
 - with Intel Python (assuming LMod has been set up in the container):
   ml intelpy/3.5.2 
   MKL_NUM_THREADS=8 python mattest.py mkl 8
+  
   |                             |  container  | native
+  | ---------------------------------|--------------|-----------------|
   |scrubpeak MKL, 1 thread    |    1370 msec  | |
   |scrubpeak MKL, 8 threads   |     194 msec | |
   |kp108 AVX MKL, 1 thread     |    661 msec  | 645 msec|
