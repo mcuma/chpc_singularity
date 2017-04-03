@@ -107,12 +107,27 @@ singularity shell -B /scratch -B /uufs/chpc.utah.edu -s /bin/bash ubuntu_tensorf
 ```
 Alternatively, use environment variable `SINGULARITY_BINDPATH="/scratch,/uufs/chpc.utah.edu"`.
 
+### MPI support
+
+Singularity supports MPI (including IB), as described at [http://singularity.lbl.gov/docs-hpc](http://singularity.lbl.gov/docs-hpc). In this description they discuss OpenMPI (> 2.1 which we don't have installed yet) but we have tested this with the lastest MPICH variants (MPICH, IMPI), and it works as well 
+
+In essence, if one is on a single node, it does not matter if the MPI program is called in our out of the container, but, for multi-node calculations, especially if run through SLURM, the recommended way is to have the `mpirun` to execute the container, which in turns executes the MPI program.
+
+For example how to roll in IB support in a container, see [our Ubuntu MPI container](https://github.com/mcuma/chpc_singularity/tree/master/ubuntu_mpi). On can add LMod as described below instead of sourcing the Intel stack directly, we have verified Intel MPI to work using the IB.
+
+As for utility of running MPI containers, I can't think of any now, unless the application is really difficult to build, stick to host based execution.
+
+### Accelerated libraries
+
+A concern in the Python based containers was how numPy and sciPy performance would be using Ubuntu stock libraries. We did some testing and found that stock Ubuntu OpenBLAS performance is on par with MKL, except for AVX2 enabled CPUs where MKL is about 30% faster for matrix multiply. 
+- for details, see [our Ubuntu Python container](https://github.com/mcuma/chpc_singularity/tree/master/ubuntu_python).
+
 ### Including LMod support
 
 Modules support pulling programs from CHPC sys branch may be useful for some containers. In particular, we can use the Intel compiler/MPI stack to build MPI programs in the container, or use Intel Python Distribution. Both are built in distro-agnostic fashion so if installed on CentOS, they work on e.g. Ubuntu.
 
 This description is for Ubuntu based containers, for CentOS, sys branch LMod works with the CHPC CentOS7 LMod installation after re-initializing LMod (because the shell functions don't get passed to the container).
-For Ubuntu containers, we need to do the following
+For Ubuntu containers, we need to do the following:
 - have LMod installed in the sys branch using Ubuntu - can be done from the container
  -- now /uufs/chpc.utah.edu/sys/installdir/lmod/7.4-u16/
  -- need to have specific Ubuntu install since some commands (tr, lua) and Lua libraries have different location on Ubuntu than on CentOS
@@ -146,7 +161,7 @@ For example of container that has the LMod support built in, see [Ubuntu Python 
 
 ## Things to still look at
 
-- running MPI programs that are in the container - IMHO unless the application is really difficult to build, stick to host based execution - works, see ubuntu_mpi
+
 - including sys branch tools like MKL in the container for better performance
  -- can supply Ubuntu's OpenBlas under numpy - need to test performance
 - running X applications out of the container - works, but, OpenGL is questionable
